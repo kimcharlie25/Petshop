@@ -338,12 +338,18 @@ if (receiptFile && !receiptUrl) {
 💰 TOTAL: ₱[total]
 
 💳 Payment: [Method]
+📸 Payment Receipt: [URL if uploaded] OR
 📸 Payment Screenshot: Please attach your payment receipt screenshot
 
 📝 Notes: [if any]
 
 Please confirm this order to proceed. Thank you for choosing ClickEats! 🥟
 ```
+
+**Receipt URL in Message:**
+- If customer uploads a receipt, the Cloudinary URL is automatically included in the message
+- Recipient can click the link to view the receipt image directly
+- Makes it easy to verify payment without downloading files
 
 **Messenger Link:**
 ```typescript

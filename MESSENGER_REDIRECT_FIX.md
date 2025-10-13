@@ -114,6 +114,8 @@ window.location.href = webLink;
 3. Order is created in database
 4. Order details are copied to clipboard
 5. Browser navigates to Messenger with pre-filled message
+   - **Receipt URL is included in message if uploaded**
+   - Recipient can click link to view receipt image
 6. User confirms order in Messenger
 
 ## Alternative Solutions Considered
