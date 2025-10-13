@@ -8,6 +8,7 @@ interface AuthContextType {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
+  changePassword: (newPassword: string) => Promise<{ error: AuthError | null }>;
   isAdmin: boolean;
 }
 
@@ -69,6 +70,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     await supabase.auth.signOut();
   };
 
+  const changePassword = async (newPassword: string) => {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
+    });
+    return { error };
+  };
+
   // Check if user is admin (you can customize this logic based on your needs)
   const isAdmin = user?.email === 'admin@clickeats.com' || user?.user_metadata?.role === 'admin';
 
@@ -78,6 +86,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loading,
     signIn,
     signOut,
+    changePassword,
     isAdmin,
   };
 

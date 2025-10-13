@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Save, Upload, X } from 'lucide-react';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { useImageUpload } from '../hooks/useImageUpload';
+import PasswordChange from './PasswordChange';
 
 const SiteSettingsManager: React.FC = () => {
   const { siteSettings, loading, updateSiteSettings } = useSiteSettings();
@@ -104,39 +105,41 @@ const SiteSettingsManager: React.FC = () => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-noto font-semibold text-black">Site Settings</h2>
-        {!isEditing ? (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2"
-          >
-            <Save className="h-4 w-4" />
-            <span>Edit Settings</span>
-          </button>
-        ) : (
-          <div className="flex space-x-2">
+    <div className="space-y-6">
+      {/* Site Settings Section */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-noto font-semibold text-black">Site Settings</h2>
+          {!isEditing ? (
             <button
-              onClick={handleCancel}
-              className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-200 flex items-center space-x-2"
-            >
-              <X className="h-4 w-4" />
-              <span>Cancel</span>
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={uploading}
-              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2 disabled:opacity-50"
+              onClick={() => setIsEditing(true)}
+              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2"
             >
               <Save className="h-4 w-4" />
-              <span>{uploading ? 'Saving...' : 'Save Changes'}</span>
+              <span>Edit Settings</span>
             </button>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className="flex space-x-2">
+              <button
+                onClick={handleCancel}
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-200 flex items-center space-x-2"
+              >
+                <X className="h-4 w-4" />
+                <span>Cancel</span>
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={uploading}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2 disabled:opacity-50"
+              >
+                <Save className="h-4 w-4" />
+                <span>{uploading ? 'Saving...' : 'Save Changes'}</span>
+              </button>
+            </div>
+          )}
+        </div>
 
-      <div className="space-y-6">
+        <div className="space-y-6">
         {/* Site Logo */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -250,7 +253,11 @@ const SiteSettingsManager: React.FC = () => {
             )}
           </div>
         </div>
+        </div>
       </div>
+
+      {/* Password Change Section */}
+      <PasswordChange />
     </div>
   );
 };
