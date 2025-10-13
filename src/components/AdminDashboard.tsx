@@ -87,6 +87,10 @@ const AdminDashboard: React.FC = () => {
       lowStockThreshold: Math.max(0, Math.floor(Number(formData.lowStockThreshold ?? 0)))
     };
 
+    console.log('[DEBUG] handleSaveItem - formData:', formData);
+    console.log('[DEBUG] handleSaveItem - payload:', payload);
+    console.log('[DEBUG] handleSaveItem - editingItem:', editingItem);
+
     if (payload.trackInventory && (payload.stockQuantity === null || Number.isNaN(payload.stockQuantity))) {
       alert('Please provide a valid stock quantity when inventory tracking is enabled.');
       return;
@@ -94,6 +98,7 @@ const AdminDashboard: React.FC = () => {
 
     try {
       if (editingItem) {
+        console.log('[DEBUG] Calling updateMenuItem with id:', editingItem.id);
         await updateMenuItem(editingItem.id, payload);
       } else {
         await addMenuItem(payload as Omit<MenuItem, 'id'>);
@@ -101,6 +106,7 @@ const AdminDashboard: React.FC = () => {
       setCurrentView('items');
       setEditingItem(null);
     } catch (error) {
+      console.error('[DEBUG] Error in handleSaveItem:', error);
       alert('Failed to save item');
     }
   };

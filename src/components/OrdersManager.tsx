@@ -78,6 +78,17 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ onBack }) => {
     });
   };
 
+  const formatDateTimeForCSV = (dateString: string) => {
+    return new Date(dateString).toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    }).replace(/,/g, ''); // Remove commas for CSV compatibility
+  };
+
   const formatServiceType = (serviceType: string) => {
     return serviceType.charAt(0).toUpperCase() + serviceType.slice(1).replace('-', ' ');
   };
@@ -145,49 +156,29 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ onBack }) => {
         return;
       }
 
-      // CSV Headers
+      // CSV Headers - Exact order as specified
       const headers = [
-        'Order ID',
-        'Date',
-        'Customer Name',
-        'Contact Number',
-        'Service Type',
-        'Address',
-        'Payment Method',
-        'Items',
-        'Total',
-        'Status',
-        'Notes'
+        'OrderID',
+        'CustName',
+        'ContactNum',
+        'Email',
+        'TotalSpent',
+        'OrderDateandTime',
+        'ServiceType',
+        'remarks'
       ];
 
-      // CSV Rows
+      // CSV Rows - Exact order as specified
       const rows = completedOrders.map(order => {
-        const itemsList = order.order_items.map(item => {
-          let itemStr = `${item.name} x${item.quantity}`;
-          if (item.variation) {
-            itemStr += ` (${item.variation.name})`;
-          }
-          if (item.add_ons && item.add_ons.length > 0) {
-            const addOnsStr = item.add_ons.map((a: any) => 
-              a.quantity > 1 ? `${a.name} x${a.quantity}` : a.name
-            ).join(', ');
-            itemStr += ` + ${addOnsStr}`;
-          }
-          return itemStr;
-        }).join('; ');
-
         return [
           order.id.slice(-8).toUpperCase(),
-          formatDateTime(order.created_at),
           order.customer_name,
           order.contact_number,
-          formatServiceType(order.service_type),
-          order.address || 'N/A',
-          order.payment_method,
-          `"${itemsList}"`, // Wrap in quotes to handle commas
+          'N/A', // Email field not in database
           order.total.toFixed(2),
-          order.status,
-          `"${order.notes || 'N/A'}"` // Wrap in quotes
+          formatDateTimeForCSV(order.created_at),
+          formatServiceType(order.service_type),
+          order.notes || 'N/A'
         ];
       });
 

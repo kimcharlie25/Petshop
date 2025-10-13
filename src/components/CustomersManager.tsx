@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowLeft, Search, Download, Phone, MapPin, ShoppingCart, DollarSign, Calendar, User, X } from 'lucide-react';
+import { ArrowLeft, Search, Download, Phone, MapPin, ShoppingCart, Calendar, User, X } from 'lucide-react';
 import { useOrders } from '../hooks/useOrders';
 
 interface CustomersManagerProps {
@@ -122,6 +122,14 @@ const CustomersManager: React.FC<CustomersManagerProps> = ({ onBack }) => {
     });
   };
 
+  const escapeCSVField = (field: string): string => {
+    // If field contains comma, quote, or newline, wrap in quotes and escape internal quotes
+    if (field.includes(',') || field.includes('"') || field.includes('\n')) {
+      return `"${field.replace(/"/g, '""')}"`;
+    }
+    return field;
+  };
+
   const exportToCSV = () => {
     setExporting(true);
     try {
@@ -143,26 +151,30 @@ const CustomersManager: React.FC<CustomersManagerProps> = ({ onBack }) => {
         'Delivery Addresses'
       ];
 
-      // CSV Rows
+      // CSV Rows - properly escape all fields
       const rows = filtered.map(customer => [
-        customer.name,
-        customer.contactNumber,
+        escapeCSVField(customer.name),
+        escapeCSVField(customer.contactNumber),
         customer.orderCount.toString(),
         customer.totalSpent.toFixed(2),
-        formatDate(customer.firstOrderDate),
-        formatDate(customer.lastOrderDate),
-        customer.serviceTypes.join('; '),
-        `"${customer.addresses.join('; ')}"` // Wrap in quotes to handle commas
+        escapeCSVField(formatDate(customer.firstOrderDate)),
+        escapeCSVField(formatDate(customer.lastOrderDate)),
+        escapeCSVField(customer.serviceTypes.join('; ')),
+        escapeCSVField(customer.addresses.join('; '))
       ]);
 
-      // Create CSV content
+      // Create CSV content with proper line breaks
       const csvContent = [
         headers.join(','),
         ...rows.map(row => row.join(','))
-      ].join('\n');
+      ].join('\r\n');
+
+      // Add BOM for Excel UTF-8 support
+      const BOM = '\uFEFF';
+      const csvWithBOM = BOM + csvContent;
 
       // Create blob and download
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([csvWithBOM], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
       
@@ -187,7 +199,6 @@ const CustomersManager: React.FC<CustomersManagerProps> = ({ onBack }) => {
   // Calculate stats
   const totalCustomers = customers.length;
   const totalOrders = customers.reduce((sum, c) => sum + c.orderCount, 0);
-  const totalRevenue = customers.reduce((sum, c) => sum + c.totalSpent, 0);
   const avgOrdersPerCustomer = totalCustomers > 0 ? (totalOrders / totalCustomers).toFixed(1) : '0';
   const repeatCustomers = customers.filter(c => c.orderCount > 1).length;
 
@@ -226,7 +237,7 @@ const CustomersManager: React.FC<CustomersManagerProps> = ({ onBack }) => {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
@@ -234,26 +245,6 @@ const CustomersManager: React.FC<CustomersManagerProps> = ({ onBack }) => {
                 <p className="text-2xl font-bold text-gray-900">{totalCustomers}</p>
               </div>
               <User className="h-8 w-8 text-blue-500" />
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-gray-600 mb-1">Total Orders</p>
-                <p className="text-2xl font-bold text-gray-900">{totalOrders}</p>
-              </div>
-              <ShoppingCart className="h-8 w-8 text-green-500" />
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-gray-600 mb-1">Total Revenue</p>
-                <p className="text-2xl font-bold text-gray-900">₱{totalRevenue.toFixed(0)}</p>
-              </div>
-              <DollarSign className="h-8 w-8 text-yellow-500" />
             </div>
           </div>
 

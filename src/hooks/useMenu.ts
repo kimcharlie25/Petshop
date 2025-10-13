@@ -146,26 +146,36 @@ export const useMenu = () => {
 
   const updateMenuItem = async (id: string, updates: Partial<MenuItem>) => {
     try {
+      console.log('[DEBUG] updateMenuItem called with:', { id, updates });
+      
+      // Build update object, only including defined values
+      const updateData: any = {};
+      
+      if (updates.name !== undefined) updateData.name = updates.name;
+      if (updates.description !== undefined) updateData.description = updates.description;
+      if (updates.basePrice !== undefined) updateData.base_price = updates.basePrice;
+      if (updates.category !== undefined) updateData.category = updates.category;
+      if (updates.popular !== undefined) updateData.popular = updates.popular;
+      if (updates.available !== undefined) updateData.available = updates.available;
+      if (updates.image !== undefined) updateData.image_url = updates.image || null;
+      if (updates.discountPrice !== undefined) updateData.discount_price = updates.discountPrice || null;
+      if (updates.discountStartDate !== undefined) updateData.discount_start_date = updates.discountStartDate || null;
+      if (updates.discountEndDate !== undefined) updateData.discount_end_date = updates.discountEndDate || null;
+      if (updates.discountActive !== undefined) updateData.discount_active = updates.discountActive;
+      if (updates.trackInventory !== undefined) updateData.track_inventory = updates.trackInventory;
+      if (updates.stockQuantity !== undefined) updateData.stock_quantity = updates.stockQuantity;
+      if (updates.lowStockThreshold !== undefined) updateData.low_stock_threshold = updates.lowStockThreshold;
+
+      console.log('[DEBUG] updateData being sent to Supabase:', updateData);
+
       // Update menu item
-      const { error: itemError } = await supabase
+      const { data, error: itemError } = await supabase
         .from('menu_items')
-        .update({
-          name: updates.name,
-          description: updates.description,
-          base_price: updates.basePrice,
-          category: updates.category,
-          popular: updates.popular,
-          available: updates.available,
-          image_url: updates.image || null,
-          discount_price: updates.discountPrice || null,
-          discount_start_date: updates.discountStartDate || null,
-          discount_end_date: updates.discountEndDate || null,
-          discount_active: updates.discountActive,
-          track_inventory: updates.trackInventory,
-          stock_quantity: updates.stockQuantity,
-          low_stock_threshold: updates.lowStockThreshold
-        })
-        .eq('id', id);
+        .update(updateData)
+        .eq('id', id)
+        .select();
+
+      console.log('[DEBUG] Supabase response:', { data, error: itemError });
 
       if (itemError) throw itemError;
 

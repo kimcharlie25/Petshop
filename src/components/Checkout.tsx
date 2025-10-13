@@ -29,7 +29,6 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
   const [referenceNumber] = useState('');
   const [notes, setNotes] = useState('');
   const [uiNotice, setUiNotice] = useState<string | null>(null);
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   // Receipt upload state
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
@@ -203,20 +202,15 @@ Please confirm this order to proceed. Thank you for choosing ClickEats! 🥟
     `.trim();
 
     const pageId = '61579693577478';
-    // Deep link retained for future use if needed
-    // const appDeepLink = `fb-messenger://user-thread/${pageId}`;
     const encodedMessage = encodeURIComponent(orderDetails);
     const webLink = `https://m.me/${pageId}?text=${encodedMessage}`;
 
     // Best effort: copy order details so user can paste in Messenger if text cannot be prefilled
     await copyOrderDetails(orderDetails);
 
-    if (isMobile) {
-      // Always prefer the web messenger with prefilled text on mobile as first choice
-      window.location.href = webLink;
-    } else {
-      window.open(webLink, '_blank');
-    }
+    // Use window.location for both mobile and desktop to avoid popup blocker
+    // This will navigate away from the site but ensures the link always works
+    window.location.href = webLink;
     
   };
 
