@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowLeft, CheckCircle, Clock, XCircle, RefreshCw, ChevronDown, Search, Image as ImageIcon, Download, Calendar } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Clock, XCircle, RefreshCw, ChevronDown, Search, Image as ImageIcon, Download, Calendar, DollarSign } from 'lucide-react';
 import { useOrders, OrderWithItems } from '../hooks/useOrders';
 
 interface OrdersManagerProps {
@@ -216,6 +216,18 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ onBack }) => {
     setDateTo('');
   };
 
+  // Calculate total sales from completed orders
+  const totalSales = useMemo(() => {
+    return filtered
+      .filter(order => order.status.toLowerCase() === 'completed')
+      .reduce((sum, order) => sum + order.total, 0);
+  }, [filtered]);
+
+  // Calculate number of completed orders
+  const completedOrdersCount = useMemo(() => {
+    return filtered.filter(order => order.status.toLowerCase() === 'completed').length;
+  }, [filtered]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -367,6 +379,56 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ onBack }) => {
                 {dateTo && ` to ${new Date(dateTo).toLocaleDateString()}`}
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Sales Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-green-100 text-sm font-medium mb-1">Total Sales</p>
+                <p className="text-3xl font-bold">₱{totalSales.toFixed(2)}</p>
+                <p className="text-green-100 text-xs mt-1">
+                  {completedOrdersCount} completed order{completedOrdersCount !== 1 ? 's' : ''}
+                </p>
+              </div>
+              <div className="bg-white/20 p-3 rounded-lg">
+                <DollarSign className="h-8 w-8" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-blue-100 text-sm font-medium mb-1">All Orders</p>
+                <p className="text-3xl font-bold">{filtered.length}</p>
+                <p className="text-blue-100 text-xs mt-1">
+                  {statusFilter === 'all' ? 'All statuses' : statusFilter}
+                </p>
+              </div>
+              <div className="bg-white/20 p-3 rounded-lg">
+                <Clock className="h-8 w-8" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-purple-100 text-sm font-medium mb-1">Average Order</p>
+                <p className="text-3xl font-bold">
+                  ₱{completedOrdersCount > 0 ? (totalSales / completedOrdersCount).toFixed(2) : '0.00'}
+                </p>
+                <p className="text-purple-100 text-xs mt-1">
+                  Per completed order
+                </p>
+              </div>
+              <div className="bg-white/20 p-3 rounded-lg">
+                <CheckCircle className="h-8 w-8" />
+              </div>
+            </div>
           </div>
         </div>
 
