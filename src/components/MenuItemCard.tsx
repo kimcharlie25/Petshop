@@ -106,164 +106,145 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
 
   return (
     <>
-      <div className={`bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group animate-scale-in border border-gray-100 ${!item.available ? 'opacity-60' : ''}`}>
-        {/* Image Container with Badges */}
-        <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100">
-          {item.image ? (
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              loading="lazy"
-              decoding="async"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-                e.currentTarget.nextElementSibling?.classList.remove('hidden');
-              }}
-            />
-          ) : null}
-          <div className={`absolute inset-0 flex items-center justify-center ${item.image ? 'hidden' : ''}`}>
-            <div className="text-6xl opacity-20 text-gray-400">☕</div>
+      <div className="w-full">
+        {/* Tropical Gradient Card Container */}
+        <div 
+          className={`relative w-full aspect-square rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group animate-scale-in ${
+            !item.available ? 'opacity-60' : ''
+          }`}
+          style={{
+            background: 'linear-gradient(135deg, #FFE933 0%, #FFD700 25%, #FFB347 50%, #FF9500 75%, #FF7700 100%)',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
+          }}
+        >
+          {/* Product Image - Covering entire card with rounded corners */}
+          <div className="absolute inset-0 z-10">
+            {item.image ? (
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-full h-full object-cover rounded-2xl transition-transform duration-300 group-hover:scale-105"
+                style={{
+                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15))'
+                }}
+                loading="lazy"
+                decoding="async"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+            ) : null}
+            <div className={`absolute inset-0 flex items-center justify-center rounded-2xl ${item.image ? 'hidden' : ''}`}>
+              <div className="text-6xl opacity-30 text-white">☕</div>
+            </div>
           </div>
           
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
+          {/* Badges - Top corners */}
+          <div className="absolute top-3 left-3 flex flex-col gap-1 z-20">
             {item.isOnDiscount && item.discountPrice && (
-              <div className="bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-pulse">
+              <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg animate-pulse">
                 SALE
               </div>
             )}
             {item.popular && (
-              <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                ⭐ POPULAR
+              <div className="bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                ⭐
               </div>
             )}
           </div>
           
           {!item.available && (
-            <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+            <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg z-20">
               UNAVAILABLE
             </div>
           )}
           
-          {/* Discount Percentage Badge */}
-          {showDiscount && discountedPrice !== undefined && (
-            <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-red-600 text-xs font-bold px-2 py-1 rounded-full shadow-lg">
-              {Math.round(((basePrice - discountedPrice) / basePrice) * 100)}% OFF
-            </div>
-          )}
-        </div>
-        
-        {/* Content */}
-        <div className="p-5">
-          <div className="flex items-start justify-between mb-3">
-            <h4 className="text-lg font-semibold text-gray-900 leading-tight flex-1 pr-2">{item.name}</h4>
-            {item.variations && item.variations.length > 0 && (
-              <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full whitespace-nowrap">
-                {item.variations.length} sizes
+          {/* Add Button - Bottom right corner */}
+          <div className="absolute bottom-3 right-3 z-20">
+            {!item.available ? (
+              <button
+                disabled
+                className="w-7 h-7 bg-gray-400 rounded-full flex items-center justify-center cursor-not-allowed shadow-lg"
+                style={{
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+                }}
+              >
+                <X className="h-3.5 w-3.5 text-white" />
+              </button>
+            ) : quantity === 0 ? (
+              <button
+                onClick={handleAddToCart}
+                className="w-7 h-7 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-all duration-200 transform hover:scale-110 shadow-lg"
+                style={{
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+                }}
+              >
+                <Plus className="h-3.5 w-3.5" style={{ color: '#FF7700', strokeWidth: '2.5px' }} />
+              </button>
+            ) : (
+              <div className="flex items-center space-x-1 bg-white rounded-full p-1 shadow-lg" style={{
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+              }}>
+                <button
+                  onClick={handleDecrement}
+                  className="w-5 h-5 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors duration-200"
+                >
+                  <Minus className="h-2.5 w-2.5" style={{ color: '#FF7700' }} />
+                </button>
+                <span className="font-bold text-gray-800 text-xs min-w-[16px] text-center">{quantity}</span>
+                <button
+                  onClick={handleIncrement}
+                  className="w-5 h-5 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors duration-200"
+                >
+                  <Plus className="h-2.5 w-2.5" style={{ color: '#FF7700' }} />
+                </button>
               </div>
             )}
           </div>
+        </div>
+        
+        {/* Text Section - Below the card */}
+        <div className="mt-2">
+          {/* Product Title */}
+          <h4 className="text-sm md:text-base font-semibold text-gray-900 leading-tight" style={{
+            fontWeight: '600',
+            lineHeight: '1.3',
+            color: '#1E1E1E',
+            maxLines: 2,
+            overflow: 'ellipsis',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical'
+          }}>
+            {item.name}
+          </h4>
           
-          <p className={`text-sm mb-4 leading-relaxed ${!item.available ? 'text-gray-400' : 'text-gray-600'}`}>
-            {!item.available ? 'Currently Unavailable' : item.description}
-          </p>
-          
-          {/* Pricing Section */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex-1">
-              {showDiscount && discountedPrice !== undefined ? (
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-2xl font-bold text-red-600">
-                      ₱{discountedPrice.toFixed(2)}
-                    </span>
-                    <span className="text-sm text-gray-500 line-through">
-                      ₱{basePrice.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    Save ₱{(basePrice - discountedPrice).toFixed(2)}
-                  </div>
-                </div>
-              ) : (
-                <div className="text-2xl font-bold text-gray-900">
+          {/* Product Price */}
+          <div className="mt-1">
+            {showDiscount && discountedPrice !== undefined ? (
+              <div className="flex items-center space-x-2">
+                <span className="text-xs md:text-sm font-normal" style={{
+                  fontWeight: '400',
+                  lineHeight: '1.4',
+                  color: '#666666'
+                }}>
+                  from ₱{discountedPrice.toFixed(2)}
+                </span>
+                <span className="text-xs text-gray-400 line-through">
                   ₱{basePrice.toFixed(2)}
-                </div>
-              )}
-              
-              {item.variations && item.variations.length > 0 && (
-                <div className="text-xs text-gray-500 mt-1">
-                  Starting price
-                </div>
-              )}
-            </div>
-            
-            {/* Action Buttons */}
-            <div className="flex-shrink-0">
-              {!item.available ? (
-                <button
-                  disabled
-                  className="bg-gray-200 text-gray-500 px-4 py-2.5 rounded-xl cursor-not-allowed font-medium text-sm"
-                >
-                  Unavailable
-                </button>
-              ) : quantity === 0 ? (
-                <button
-                  onClick={handleAddToCart}
-                  className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2.5 rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 transform hover:scale-105 font-medium text-sm shadow-lg hover:shadow-xl"
-                >
-                  {item.variations?.length || item.addOns?.length ? 'Customize' : 'Add to Cart'}
-                </button>
-              ) : (
-                <div className="flex items-center space-x-2 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-1 border border-yellow-200">
-                  <button
-                    onClick={handleDecrement}
-                    className="p-2 hover:bg-yellow-200 rounded-lg transition-colors duration-200 hover:scale-110"
-                  >
-                    <Minus className="h-4 w-4 text-gray-700" />
-                  </button>
-                  <span className="font-bold text-gray-900 min-w-[28px] text-center text-sm">{quantity}</span>
-                  <button
-                    onClick={handleIncrement}
-                    className="p-2 hover:bg-yellow-200 rounded-lg transition-colors duration-200 hover:scale-110"
-                  >
-                    <Plus className="h-4 w-4 text-gray-700" />
-                  </button>
-                </div>
-              )}
-            </div>
+                </span>
+              </div>
+            ) : (
+              <span className="text-xs md:text-sm font-normal" style={{
+                fontWeight: '400',
+                lineHeight: '1.4',
+                color: '#666666'
+              }}>
+                from ₱{basePrice.toFixed(2)}
+              </span>
+            )}
           </div>
-
-          {/* Stock indicator */}
-          {item.trackInventory && item.stockQuantity !== null && (
-            <div className="mt-3">
-              {item.stockQuantity > item.lowStockThreshold ? (
-                <div className="flex items-center space-x-2 text-xs text-green-700 bg-green-50 px-3 py-2 rounded-lg border border-green-200">
-                  <span className="font-semibold">✓</span>
-                  <span className="font-medium">{item.stockQuantity} in stock</span>
-                </div>
-              ) : item.stockQuantity > 0 ? (
-                <div className="flex items-center space-x-2 text-xs text-orange-700 bg-orange-50 px-3 py-2 rounded-lg border border-orange-200 animate-pulse">
-                  <span className="font-semibold">⚠️</span>
-                  <span className="font-medium">Only {item.stockQuantity} left!</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-2 text-xs text-red-700 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
-                  <span className="font-semibold">✕</span>
-                  <span className="font-medium">Out of stock</span>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Add-ons indicator */}
-          {item.addOns && item.addOns.length > 0 && (
-            <div className="flex items-center space-x-1 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-lg mt-2">
-              <span>+</span>
-              <span>{item.addOns.length} add-on{item.addOns.length > 1 ? 's' : ''} available</span>
-            </div>
-          )}
         </div>
       </div>
 

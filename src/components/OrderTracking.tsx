@@ -235,7 +235,7 @@ const OrderTracking: React.FC<OrderTrackingProps> = ({ onBack }) => {
             </div>
 
             {/* Search Input */}
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <input
                 type={searchType === 'phone' ? 'tel' : 'text'}
                 value={searchValue}
@@ -247,7 +247,7 @@ const OrderTracking: React.FC<OrderTrackingProps> = ({ onBack }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
+                className="px-8 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed font-medium whitespace-nowrap"
               >
                 {loading ? 'Searching...' : 'Search'}
               </button>

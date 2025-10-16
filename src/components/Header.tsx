@@ -82,29 +82,13 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
             )}
           </nav>
 
-          {/* Mobile Category Navigation */}
-          <div className="md:hidden">
-            <select
-              value={selectedCategory || 'all'}
-              onChange={(e) => onCategoryClick?.(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white"
-            >
-              <option value="all">All Categories</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.icon} {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          
           <div className="flex items-center space-x-2">
             <button 
               onClick={onOrderTrackingClick}
-              className="hidden sm:flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-black hover:bg-gray-100 rounded-lg transition-all duration-200 text-sm font-medium"
+              className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-black hover:bg-gray-100 rounded-lg transition-all duration-200 text-sm font-medium"
             >
               <Package className="h-5 w-5" />
-              <span>Track Order</span>
+              <span className="hidden sm:inline">Track Order</span>
             </button>
             <button 
               onClick={onCartClick}
