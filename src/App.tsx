@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Menu from './components/Menu';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
+import OrderTracking from './components/OrderTracking';
 import FloatingCartButton from './components/FloatingCartButton';
 import AdminDashboard from './components/AdminDashboard';
 import AdminLogin from './components/AdminLogin';
@@ -15,10 +16,10 @@ import { AuthProvider } from './contexts/AuthContext';
 function MainApp() {
   const cart = useCart();
   const { menuItems } = useMenu();
-  const [currentView, setCurrentView] = React.useState<'menu' | 'cart' | 'checkout'>('menu');
+  const [currentView, setCurrentView] = React.useState<'menu' | 'cart' | 'checkout' | 'orderTracking'>('menu');
   const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
 
-  const handleViewChange = (view: 'menu' | 'cart' | 'checkout') => {
+  const handleViewChange = (view: 'menu' | 'cart' | 'checkout' | 'orderTracking') => {
     setCurrentView(view);
   };
 
@@ -37,6 +38,7 @@ function MainApp() {
         cartItemsCount={cart.getTotalItems()}
         onCartClick={() => handleViewChange('cart')}
         onMenuClick={() => handleViewChange('menu')}
+        onOrderTrackingClick={() => handleViewChange('orderTracking')}
         onCategoryClick={handleCategoryClick}
         selectedCategory={selectedCategory}
       />
@@ -67,6 +69,12 @@ function MainApp() {
           cartItems={cart.cartItems}
           totalPrice={cart.getTotalPrice()}
           onBack={() => handleViewChange('cart')}
+        />
+      )}
+      
+      {currentView === 'orderTracking' && (
+        <OrderTracking 
+          onBack={() => handleViewChange('menu')}
         />
       )}
       

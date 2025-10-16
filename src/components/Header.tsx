@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Package } from 'lucide-react';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { useCategories } from '../hooks/useCategories';
 
@@ -7,11 +7,12 @@ interface HeaderProps {
   cartItemsCount: number;
   onCartClick: () => void;
   onMenuClick: () => void;
+  onOrderTrackingClick?: () => void;
   onCategoryClick?: (categoryId: string) => void;
   selectedCategory?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClick, onCategoryClick, selectedCategory }) => {
+const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClick, onOrderTrackingClick, onCategoryClick, selectedCategory }) => {
   const { siteSettings, loading } = useSiteSettings();
   const { categories, loading: categoriesLoading } = useCategories();
 
@@ -98,6 +99,13 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
           </div>
           
           <div className="flex items-center space-x-2">
+            <button 
+              onClick={onOrderTrackingClick}
+              className="hidden sm:flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-black hover:bg-gray-100 rounded-lg transition-all duration-200 text-sm font-medium"
+            >
+              <Package className="h-5 w-5" />
+              <span>Track Order</span>
+            </button>
             <button 
               onClick={onCartClick}
               className="relative p-2 text-gray-700 hover:text-black hover:bg-yellow-100 rounded-full transition-all duration-200"
