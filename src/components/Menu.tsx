@@ -1,7 +1,6 @@
 import React from 'react';
 import { MenuItem, CartItem } from '../types';
 import { useCategories } from '../hooks/useCategories';
-import { useSiteSettings } from '../hooks/useSiteSettings';
 import MenuItemCard from './MenuItemCard';
 import MobileNav from './MobileNav';
 
@@ -24,7 +23,6 @@ interface MenuProps {
 
 const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuantity }) => {
   const { categories } = useCategories();
-  const { siteSettings, loading: settingsLoading } = useSiteSettings();
   const [activeCategory, setActiveCategory] = React.useState('hot-coffee');
 
   // Preload images when menu items change
@@ -96,15 +94,10 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
         <h2 className="text-4xl font-noto font-semibold text-black mb-4">Our Menu</h2>
-        {settingsLoading ? (
-          <div className="flex justify-center">
-            <div className="animate-pulse h-4 bg-gray-200 rounded w-96 max-w-2xl"></div>
-          </div>
-        ) : (
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            {siteSettings?.site_description || 'Discover our selection of delicious dishes, all prepared with fresh ingredients and authentic techniques.'}
-          </p>
-        )}
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Discover our selection of authentic dim sum, flavorful noodles, and traditional Asian dishes, 
+          all prepared with fresh ingredients and authentic techniques.
+        </p>
       </div>
 
       {categories.map((category) => {
@@ -119,7 +112,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
               <h3 className="text-3xl font-noto font-medium text-black">{category.name}</h3>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {categoryItems.map((item) => {
                 const cartItem = cartItems.find(cartItem =>
                   cartItem.menuItemId === item.id &&
