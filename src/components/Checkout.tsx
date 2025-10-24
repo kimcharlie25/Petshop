@@ -115,9 +115,10 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
     }
 
     // Persist order to database
+    let orderId: string;
     try {
       const mergedNotes = landmark ? `${notes ? notes + ' | ' : ''}Landmark: ${landmark}` : notes;
-      await createOrder({
+      const order = await createOrder({
         customerName,
         contactNumber,
         serviceType,
@@ -132,6 +133,7 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
         items: cartItems,
         receiptUrl: uploadedReceiptUrl ?? undefined,
       });
+      orderId = order.id;
     } catch (e) {
       const raw = e instanceof Error ? e.message : '';
       if (/insufficient stock/i.test(raw)) {
@@ -164,6 +166,7 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
     
     const orderDetails = `
 🛒 ClickEats ORDER
+📋 Order Code: #${orderId.slice(-8).toUpperCase()}
 
 👤 Customer: ${customerName}
 📞 Contact: ${contactNumber}
@@ -199,6 +202,8 @@ ${uploadedReceiptUrl ? `📸 Payment Receipt: ${uploadedReceiptUrl}` : '📸 Pay
 ${notes ? `📝 Notes: ${notes}` : ''}
 
 Please confirm this order to proceed. Thank you for choosing ClickEats! 🥟
+
+📋 Order Code: #${orderId.slice(-8).toUpperCase()}
     `.trim();
 
     const pageId = '61579693577478';
