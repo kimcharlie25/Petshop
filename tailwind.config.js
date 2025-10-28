@@ -4,32 +4,47 @@ export default {
   theme: {
     extend: {
       colors: {
-        red: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#7f1d1d'
+        'forest': {
+          50: '#f0f5f4',
+          100: '#d4e6e0',
+          200: '#a9cdc0',
+          300: '#7eb4a1',
+          400: '#539b81',
+          500: '#2d5f4f',
+          600: '#234d3f',
+          700: '#1a3b2f',
+          800: '#11281f',
+          900: '#081610'
         },
-        yellow: {
-          50: '#fefce8',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f'
-        }
+        'mustard': {
+          50: '#fffef0',
+          100: '#fffce6',
+          200: '#fff8cc',
+          300: '#fff4b3',
+          400: '#fff099',
+          500: '#ffcc00',
+          600: '#cc9900',
+          700: '#996600',
+          800: '#663300',
+          900: '#331a00'
+        },
+        'marigold': {
+          50: '#fff9f0',
+          100: '#ffe6d4',
+          200: '#ffcda9',
+          300: '#ffb47e',
+          400: '#ff9b53',
+          500: '#ff8216',
+          600: '#cc6812',
+          700: '#994e0d',
+          800: '#663408',
+          900: '#331a04'
+        },
+        'off-white': '#fafafa'
       },
       fontFamily: {
+        'montserrat': ['Montserrat', 'sans-serif'],
+        'merriweather': ['Merriweather', 'serif'],
         'inter': ['Inter', 'sans-serif'],
         'noto': ['Noto Serif', 'serif']
       },

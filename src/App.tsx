@@ -6,7 +6,6 @@ import Menu from './components/Menu';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import OrderTracking from './components/OrderTracking';
-import FloatingCartButton from './components/FloatingCartButton';
 import AdminDashboard from './components/AdminDashboard';
 import AdminLogin from './components/AdminLogin';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -33,12 +32,11 @@ function MainApp() {
     : menuItems.filter(item => item.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-cream-50 font-inter">
+    <div className="min-h-screen bg-off-white font-montserrat">
       <Header 
         cartItemsCount={cart.getTotalItems()}
         onCartClick={() => handleViewChange('cart')}
         onMenuClick={() => handleViewChange('menu')}
-        onOrderTrackingClick={() => handleViewChange('orderTracking')}
         onCategoryClick={handleCategoryClick}
         selectedCategory={selectedCategory}
       />
@@ -75,13 +73,6 @@ function MainApp() {
       {currentView === 'orderTracking' && (
         <OrderTracking 
           onBack={() => handleViewChange('menu')}
-        />
-      )}
-      
-      {currentView === 'menu' && (
-        <FloatingCartButton 
-          itemCount={cart.getTotalItems()}
-          onCartClick={() => handleViewChange('cart')}
         />
       )}
     </div>
